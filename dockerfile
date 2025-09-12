@@ -1,9 +1,7 @@
-# Stage 1: Build the Angular app
-FROM node:18-alpine AS build
+FROM node:20-alpine
 WORKDIR /app
+COPY package*.json ./
+RUN npm install
 COPY . .
-RUN npm install && npm run build
-
-# Stage 2: Serve using nginx
-FROM nginx:alpine
-COPY --from=build /app/dist/myclinic-frontend /usr/share/nginx/html
+CMD ["npm", "run", "start", "--", "--host", "0.0.0.0"]
+EXPOSE 4200

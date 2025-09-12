@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet],
+   standalone: true,
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
@@ -18,23 +19,18 @@ export class AppComponent implements OnInit{
   }
   private async initAuthFlow():Promise<void>
   {
-     const loggedIn = await this.authService.isLoggedIn();
-     console.log('Is logged in:', loggedIn);
+     const isloggedIn = await this.authService.isLoggedIn();
+     console.log('Is logged in:', isloggedIn);
 
     // if (loggedIn) {
     //   const token = await this.keycloak.getToken();
     //   console.log('Token:', token);
     
-    //   if (!(await this.authService.isLoggedIn())) {
-    // await this.authService.login();  
-    // return;
-    //   }
-    if (!(await this.authService.isLoggedIn())) {
+
+    if (!isloggedIn) {
   await this.authService.login({
     redirectUri: window.location.origin + '/choose-role'
-    
-
-  });
+     });
   return;
 }
 
@@ -42,22 +38,31 @@ export class AppComponent implements OnInit{
          const roles = this.authService.getUserRole();
         // roles = roles.filter(r => !r.startsWith('default-roles'));
 
-      if (!roles || roles.length === 0) {
+      if (!roles || roles.length === 0 ||!roles.includes('doctor') && !roles.includes('user')) {
   this.router.navigate(['/choose-role']);
+  return;
    }
-      // const isDoctor=await this.authService.hasRole('doctor');
-     // const isUser=await this.authService.hasRole('user');
 
-      if(!roles.includes('doctor') && !roles.includes('user'))
-      {
-        this.router.navigate(['/choose-role']);
-      }
-     else if (roles.includes('doctor')) {
+     const role = roles.includes('doctor') ? 'doctor' : 'user';
+  this.profileService.syncProfile({
+    keycloakId: profile.keycloakId,
+    username: profile.username,
+    email: profile.email,
+    role: role
+  }).subscribe({
+    next: () => console.log('Profile synced successfully'),
+    error: (err) => console.error('Profile sync failed:', err)
+  });
+   
+  
+  if (role === 'doctor') {
     this.router.navigateByUrl('/doctor-dashboard');
-  } else if (roles.includes('user')) {
+  } else {
     this.router.navigateByUrl('/user-dashboard');
   }
+
     }
+    
   }
 
 
