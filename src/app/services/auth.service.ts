@@ -1,45 +1,103 @@
 import { Injectable,inject } from '@angular/core';
-import { KeycloakService } from 'keycloak-angular';
+import Keycloak from 'keycloak-js';
+import { environment } from '../../environments/environment';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  constructor(private keycloak: KeycloakService) {}
-
+private keycloak: Keycloak | undefined;
   //private keycloak=inject(KeycloakService);
+  
+ init(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.keycloak = new Keycloak({
+       url: environment.keycloakUrl,
+        realm: environment.keycloakRealm,
+        clientId: environment.keycloakClientId
+      });
+console.log('Keycloak instance:', this.keycloak);
+console.log('Token:', this.keycloak?.token);
+console.log('Parsed token:', this.keycloak?.tokenParsed);
 
-async login(options?: any) {
-    return this.keycloak.login(options);
+      this.keycloak.init({
+       onLoad: 'check-sso',
+         
+          checkLoginIframe: false,
+           pkceMethod: 'S256', 
+            redirectUri: window.location.origin ,
+           silentCheckSsoRedirectUri: window.location.origin + '/assets/silent-check-sso.html'
+      }).then(authenticated => {
+        console.log('Keycloak init success, authenticated:', authenticated);
+        resolve();
+      }).catch(err => {
+        console.error('Keycloak init failed', JSON.stringify(err));
+        reject(err);
+      });
+    });
+  }
+login(): void {
+  this.keycloak?.login({
+    redirectUri: window.location.origin + '/choose-role'
+  });
+}
+register(): void {
+  if (!this.keycloak) {
+    console.error('Keycloak not initialized yet');
+    return;
   }
 
-   logout() {
-    return this.keycloak.logout();
-  }
-  async getToken():Promise<string>{
-    return await this.keycloak.getToken();
-  }
- async hasRole(role: string): Promise<boolean> {
-    return await this.keycloak.isUserInRole(role);
+  this.keycloak?.register({
+    redirectUri: window.location.origin + '/choose-role'
+  });
+}
+
+
+  logout(): void {
+    this.keycloak?.logout({ redirectUri: window.location.origin });
   }
 
-  async isLoggedIn(): Promise<boolean> {
-    return await this.keycloak.isLoggedIn();
+  getKeycloakInstance(): Keycloak | undefined {
+    return this.keycloak;
   }
-  getUserProfile()
-  {
-    const token = this.keycloak.getKeycloakInstance().tokenParsed as any;
+    
+    getUserProfile(): { keycloakId: string; username: string; email: string } | null {
+    if (!this.keycloak?.tokenParsed) return null;
+ 
+    const token = this.keycloak.tokenParsed as any;
+    console.error(token);
     return {
       keycloakId: token.sub,
       username: token.preferred_username,
       email: token.email
     };
+  }
+  navigateBasedOnRole(): void {
+  const user = this.getUserProfile();
   
-  } 
-  getUserRole(): string[] {
-  
-  return this.keycloak.getKeycloakInstance().realm_access?.roles || [];
+  if (!user){
+    this.login();
+     return;
+  }
+
+  const roles = (this.keycloak?.realmAccess?.roles) || [];
+
+  if (roles.includes('doctor')) {
+    window.location.href = '/doctor-dashboard';
+  } else if (roles.includes('user')) {
+    window.location.href = '/user-dashboard';
+  }
 }
-  
+startTokenRefresh(): void {
+  if (!this.keycloak) return;
+
+  setInterval(() => {
+    this.keycloak?.updateToken(60).catch(() => {
+      console.warn(" Token refresh failed, logging out...");
+      this.logout();
+    });
+  }, 30000); 
+}
+
 }

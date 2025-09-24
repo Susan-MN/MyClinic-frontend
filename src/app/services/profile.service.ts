@@ -8,9 +8,10 @@ import { Observable } from 'rxjs';
 })
 export class ProfileService {
   private readonly baseUrl=environment.apiUrl;
-    constructor(private http: HttpClient,private router:Router) {}
-     syncProfile(data:{keycloakId:string;username:string;email:string;role:string}) {
-    return this.http.post(`${this.baseUrl}/profile/sync`, data);
+    constructor(private router:Router , private http:HttpClient) {}
+      syncProfile(data:{keycloakId:string;username:string;email:string;role:string}) {
+        console.error("entered")
+     return this.http.post(`${this.baseUrl}/profile/sync`, data);
   }
 
 

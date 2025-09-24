@@ -25,12 +25,12 @@
             ],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
-            "assets": [
-              {
-                "glob": "**/*",
-                "input": "public"
-              }
-            ],
+           "assets": [
+  "src/favicon.ico",
+  "src/assets",
+   "src/silent-check-sso.html"
+]
+,
             "styles": [
               "src/styles.scss"
             ],
