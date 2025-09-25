@@ -7,10 +7,9 @@ import { DoctorDashboardComponent } from './components/dashboard/doctor-dashboar
 export const routes: Routes = [
     { path: '', component: HomeComponent },
     {
-        path: 'profile',
+        path: 'choose-role',
         component: UserProfileComponent
     },
     { path: 'user-dashboard', component: UserDashboardComponent },
     { path: 'doctor-dashboard', component: DoctorDashboardComponent },
-
 ];

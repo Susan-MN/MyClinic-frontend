@@ -28,7 +28,7 @@ export class HomeComponent {
 
   onRegister() {
     this.keycloak.register({
-      redirectUri: window.location.origin + '/profile'
+      redirectUri: window.location.origin + '/choose-role'
     });
   }
 }
