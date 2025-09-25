@@ -19,14 +19,11 @@ constructor(private authService:AuthService,
   private profileService:ProfileService,
   private router:Router){}
 
-public setRole(role:'doctor' | 'user'){
-    
+public setRole(role:'doctor' | 'user'){    
   const user=this.authService.getUserProfile();
     if (!user) {
-     
       this.authService.login();
-      
-      return;
+       return;
     }
   //  if (!user) return; 
   this.profileService.syncProfile({

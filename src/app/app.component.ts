@@ -12,13 +12,13 @@ import { Router } from '@angular/router';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent  {
-  constructor(private authService: AuthService) {}
+  constructor(public authService: AuthService) {}
 
-  ngOnInit(): void {
-    this.authService.init()
-      .then(() => console.log('Keycloak initialized'))
-      .catch(err => console.error('Keycloak init error', err));
-  }
+  // ngOnInit(): void {
+  //   this.authService.init()
+  //     .then(() => console.log('Keycloak initialized'))
+  //     .catch(err => console.error('Keycloak init error', err));
+  // }
  
   }
 

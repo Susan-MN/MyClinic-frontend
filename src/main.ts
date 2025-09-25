@@ -5,7 +5,8 @@ import { AuthService } from './app/services/auth.service';
 import { provideRouter } from '@angular/router';
 import { routes } from './app/app.routes';
 import { provideHttpClient } from '@angular/common/http';
-// const keycloakService = new AuthService();
+
+ const authService = new AuthService();
 
 // keycloakService.init().then(() => {
 //   bootstrapApplication(AppComponent, appConfig)
@@ -17,4 +18,35 @@ import { provideHttpClient } from '@angular/common/http';
 //       provideHttpClient() 
 //   ]
 // });
-bootstrapApplication(AppComponent,appConfig );
+// authService.init() .then(() => { console.log(' Keycloak initialized before Angular bootstrap'); 
+//     return bootstrapApplication(AppComponent, 
+//         { ...appConfig, providers: [ ...appConfig.providers!, 
+//             { provide: AuthService, useValue: authService } ] }); }) 
+//             .catch(err => { console.error(' Keycloak init failed', err); }); 
+
+
+ async function main() {
+  try {
+   
+    const appRef = await bootstrapApplication(AppComponent, {
+      ...appConfig,
+      providers: [
+        ...appConfig.providers!,
+        AuthService
+      ]
+    });
+
+    
+    const injector = appRef.injector;
+    const authService = injector.get(AuthService);
+
+   
+    await authService.init();
+    console.log(' Keycloak initialized before routing');
+  } catch (err) {
+    console.error(' Bootstrap failed', err);
+  }
+}
+
+main();
+//bootstrapApplication(AppComponent,appConfig );

@@ -23,13 +23,16 @@ console.log('Parsed token:', this.keycloak?.tokenParsed);
 
       this.keycloak.init({
        onLoad: 'check-sso',
-         
-          checkLoginIframe: false,
+         checkLoginIframe: false,
            pkceMethod: 'S256', 
             redirectUri: window.location.origin ,
            silentCheckSsoRedirectUri: window.location.origin + '/assets/silent-check-sso.html'
       }).then(authenticated => {
         console.log('Keycloak init success, authenticated:', authenticated);
+         if (authenticated) {
+        this.navigateBasedOnRole();
+        this.startTokenRefresh();
+      }
         resolve();
       }).catch(err => {
         console.error('Keycloak init failed', JSON.stringify(err));
@@ -39,7 +42,7 @@ console.log('Parsed token:', this.keycloak?.tokenParsed);
   }
 login(): void {
   this.keycloak?.login({
-    redirectUri: window.location.origin + '/choose-role'
+    redirectUri: window.location.origin+'choose-role'
   });
 }
 register(): void {
@@ -49,7 +52,7 @@ register(): void {
   }
 
   this.keycloak?.register({
-    redirectUri: window.location.origin + '/choose-role'
+    redirectUri: window.location.origin +'/choose-role'
   });
 }
 
@@ -74,12 +77,6 @@ register(): void {
     };
   }
   navigateBasedOnRole(): void {
-  const user = this.getUserProfile();
-  
-  if (!user){
-    this.login();
-     return;
-  }
 
   const roles = (this.keycloak?.realmAccess?.roles) || [];
 
@@ -87,6 +84,8 @@ register(): void {
     window.location.href = '/doctor-dashboard';
   } else if (roles.includes('user')) {
     window.location.href = '/user-dashboard';
+  } else {
+    console.warn('No matching role, staying on home');
   }
 }
 startTokenRefresh(): void {
