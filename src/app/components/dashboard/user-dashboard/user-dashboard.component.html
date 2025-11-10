@@ -1,1 +1,29 @@
-<p>user-dashboard works!</p>
+<div class="dashboard-container">
+  <mat-toolbar color="primary" class="dashboard-header">
+    <span>Patient Dashboard</span>
+    <span class="spacer"></span>
+    <button mat-raised-button color="warn" (click)="logout()">
+      <mat-icon>logout</mat-icon>
+      Logout
+    </button>
+  </mat-toolbar>
+
+  <div class="dashboard-content">
+    <mat-card *ngIf="loading" class="loading-card">
+      <mat-card-content>
+        <div class="loading-container">
+          <mat-spinner diameter="50"></mat-spinner>
+          <p>Loading available doctors...</p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <div *ngIf="!loading">
+      <app-generic-table
+        [title]="'Available Doctors'"
+        [data]="userData"
+       
+      ></app-generic-table>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,210 @@
+.home-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+// Hero Card
+.hero-card {
+  text-align: center;
+  margin-bottom: 40px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+
+  ::ng-deep .mat-mdc-card-content {
+    padding: 60px 20px;
+  }
+
+  h1 {
+    font-size: 3rem;
+    margin: 0 0 10px 0;
+    font-weight: 700;
+  }
+
+  .subtitle {
+    font-size: 1.25rem;
+    margin: 0 0 30px 0;
+    opacity: 0.9;
+  }
+
+  .button-group {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+
+    button {
+      min-width: 200px;
+
+      mat-icon {
+        margin-right: 8px;
+      }
+    }
+  }
+}
+
+// Doctors Section
+.doctors-section {
+  padding: 20px 0;
+
+  h2 {
+    text-align: center;
+    font-size: 2rem;
+    color: #1f2937;
+    margin-bottom: 40px;
+  }
+}
+
+// Loading State
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  gap: 20px;
+
+  p {
+    color: #6b7280;
+    font-size: 1.1rem;
+  }
+}
+
+// No Doctors 
+.no-doctors {
+  text-align: center;
+  padding: 60px 20px;
+  color: #6b7280;
+
+  .empty-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    color: #9ca3af;
+    margin-bottom: 16px;
+  }
+
+  p {
+    font-size: 1.1rem;
+  }
+}
+
+// Doctors Grid
+.doctors-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+  padding: 20px 0;
+}
+
+// Doctor Card
+.doctor-card {
+  transition: transform 0.2s, box-shadow 0.2s;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  ::ng-deep .mat-mdc-card-header {
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+  .doctor-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: #f3f4f6;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  ::ng-deep .mat-mdc-card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  ::ng-deep .mat-mdc-card-subtitle {
+    margin-top: 8px;
+  }
+
+  mat-chip {
+    font-size: 0.85rem;
+  }
+
+  .doctor-details {
+    margin-top: 16px;
+
+    .detail-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 8px 0;
+      color: #6b7280;
+      font-size: 0.9rem;
+
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        color: #9ca3af;
+      }
+    }
+  }
+
+  ::ng-deep .mat-mdc-card-actions {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 16px;
+
+    button {
+      mat-icon {
+        margin-right: 4px;
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
+    }
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .hero-card {
+    h1 {
+      font-size: 2rem;
+    }
+
+    .button-group {
+      flex-direction: column;
+      align-items: stretch;
+
+      button {
+        width: 100%;
+      }
+    }
+  }
+
+  .doctors-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .doctor-card {
+    ::ng-deep .mat-mdc-card-actions {
+      flex-direction: column;
+      gap: 8px;
+
+      button {
+        width: 100%;
+      }
+    }
+  }
+}
+

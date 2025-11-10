@@ -1,0 +1,29 @@
+<div class="choose-role">
+  <h2>Choose your role</h2>
+ 
+  <div class="role-grid">
+    <button class="role-card doctor" (click)="setRole(Role.Doctor)">
+      <span class="title">Doctor</span>
+    
+    </button>
+    <button class="role-card user" (click)="setRole(Role.User)">
+      <span class="title">User</span>
+     
+    </button>
+   
+  </div>
+</div>
+
+<style>
+  .choose-role { max-width: 880px; margin: 48px auto; padding: 0 16px; text-align: center; }
+  
+  .role-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 24px; }
+  .role-card { border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; cursor: pointer; background: #fff; text-align: left; transition: box-shadow 160ms ease, transform 160ms ease; }
+  .role-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.08); transform: translateY(-2px); }
+  .role-card .title { display: block; font-weight: 600; font-size: 18px; color: #111827; }
+ 
+  .role-card.doctor { border-left: 4px solid #2563eb; }
+  .role-card.user { border-left: 4px solid #10b981; }
+  .role-card.admin { border-left: 4px solid #f59e0b; }
+</style>
+

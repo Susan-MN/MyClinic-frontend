@@ -8,6 +8,9 @@ import {
   UserActivityService
 } from 'keycloak-angular';
 
+const localhostCondition = createInterceptorCondition<IncludeBearerTokenCondition>({
+  urlPattern: /^(http:\/\/localhost:5000)(\/.*)?$/i
+});
 export const provideKeycloakAngular = () =>
   provideKeycloak({
     config: {
@@ -28,6 +31,10 @@ export const provideKeycloakAngular = () =>
     ],
     providers: [
       AutoRefreshTokenService,
-      UserActivityService
+      UserActivityService,
+       {
+        provide: INCLUDE_BEARER_TOKEN_INTERCEPTOR_CONFIG,
+        useValue: [localhostCondition]
+      }
     ]
   });

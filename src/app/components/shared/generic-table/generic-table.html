@@ -1,0 +1,64 @@
+<div class="appointments-container">
+  <div class="header-row">
+    <div class="title-wrap">
+      <h2 class="title">{{ title }}</h2>
+      <p class="subtitle">Review and manage your latest items</p>
+    </div>
+    <button mat-stroked-button color="primary" (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon>
+      Back
+    </button>
+  </div>
+
+  <div class="cards-grid">
+    <mat-card *ngFor="let item of data" class="appointment-card">
+      <div class="appointment-content">
+        <div class="doctor-info">
+          <img
+            [src]="item.imageUrl || 'https://via.placeholder.com/64'"
+            alt="{{ item.name }}"
+            class="doctor-avatar"
+          />
+          <div class="info-text">
+            <h3 class="name">{{ item.name }}</h3>
+            <p class="specialization" *ngIf="item.specialization">{{ item.specialization }}</p>
+            <div class="meta">
+              <span class="meta-row">
+                <mat-icon>event</mat-icon>
+                <span>{{ item.date | date: 'EEE, MMM d, y, h:mm a' }}</span>
+              </span>
+              <span class="meta-row">
+                <mat-icon>location_on</mat-icon>
+                <span>{{ item.location }}</span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="action-section">
+          <span
+            class="status-chip"
+            [ngClass]="{
+              confirmed: item.status === 'Confirmed',
+              pending: item.status === 'Pending',
+              cancelled: item.status === 'Cancelled'
+            }"
+          >
+            {{ item.status }}
+          </span>
+
+          <div class="actions">
+            <button mat-stroked-button color="primary" (click)="onAction('reschedule', item)">
+              Reschedule
+            </button>
+            <button mat-flat-button color="accent" (click)="onAction('details', item)">
+              Details
+            </button>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+
+  <p *ngIf="!data?.length" class="no-data">No upcoming items</p>
+</div>

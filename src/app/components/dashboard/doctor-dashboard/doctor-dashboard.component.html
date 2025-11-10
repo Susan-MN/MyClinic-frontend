@@ -1,1 +1,91 @@
-<p>doctor-dashboard works!</p>
+<div class="dashboard-container">
+  <mat-toolbar color="primary" class="dashboard-header">
+    <span>Doctor Dashboard</span>
+    <span class="spacer"></span>
+    <button mat-raised-button color="warn" (click)="logout()">
+      <mat-icon>logout</mat-icon>
+      Logout
+    </button>
+  </mat-toolbar>
+
+  <div class="dashboard-content">
+    <!-- Loading State -->
+    <mat-card *ngIf="loading" class="loading-card">
+      <mat-card-content>
+        <div class="loading-container">
+          <mat-spinner diameter="50"></mat-spinner>
+          <p>Loading your profile...</p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Profile Card -->
+    <mat-card *ngIf="!loading && myProfile">
+      <mat-card-header>
+        <mat-card-title>Welcome, {{ myProfile.username }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="profile-info">
+          <div class="info-row">
+            <strong>Email:</strong>
+            <span>{{ myProfile.email }}</span>
+          </div>
+          <div class="info-row">
+            <strong>Specialization:</strong>
+            <span>{{ myProfile.specialty || 'Not set' }}</span>
+          </div>
+          <div class="info-row">
+            <strong>Location:</strong>
+            <span>{{ myProfile.location || 'Not set' }}</span>
+          </div>
+          <div class="info-row">
+            <strong>Account Status:</strong>
+            <mat-chip-set>
+              <mat-chip [class]="'status-' + (myProfile.status || 'pending')">
+                {{ getStatusLabel(myProfile.status || 'pending') }}
+              </mat-chip>
+            </mat-chip-set>
+          </div>
+        </div>
+
+        <!-- Status Messages -->
+        <div *ngIf="myProfile.status === 'pending'" class="status-message warning">
+          <mat-icon>info</mat-icon>
+          <p>Your account is pending approval by an administrator. You'll have full access once approved.</p>
+        </div>
+
+        <div *ngIf="myProfile.status === 'approved'" class="status-message success">
+          <mat-icon>check_circle</mat-icon>
+          <p>Your account has been approved! You have full access to the system.</p>
+        </div>
+
+        <div *ngIf="myProfile.status === 'rejected'" class="status-message error">
+          <mat-icon>cancel</mat-icon>
+          <p>Your account has been rejected. Please contact the administrator for more information.</p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Error Message -->
+    <mat-card *ngIf="!loading && errorMessage" class="error-card">
+      <mat-card-content>
+        <div class="error-content">
+          <mat-icon color="warn">info</mat-icon>
+          <h3>Account Status</h3>
+          <p>{{ errorMessage }}</p>
+          <p class="help-text">You can logout and login again later to check your approval status.</p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- No Profile Found -->
+    <mat-card *ngIf="!loading && !myProfile && !errorMessage">
+      <mat-card-content>
+        <div class="no-data">
+          <mat-icon>error</mat-icon>
+          <p>Unable to load your profile. Please try logging in again.</p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
